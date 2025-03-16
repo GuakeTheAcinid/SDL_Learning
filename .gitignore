@@ -1,0 +1,5 @@
+#local dirs
+/build/
+/.vscode/
+/SDL2.dll
+/cmake/
