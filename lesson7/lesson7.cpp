@@ -1,9 +1,9 @@
-#include"../lesson8/sdl_base_lesson8.cpp"
+#include"../lesson7/sdl_base_lesson7.cpp"
 
 int main(int argc, char* args[])
 {
-    printf( "LAUNCHING LESSON 8\n" );
-	printf( "SDL2 Lesson \"The Viewport\"\n" );
+    printf( "LAUNCHING LESSON 7\n" );
+	printf( "SDL2 Lesson \"Geometry Rendering\"\n" );
 	
 	if (!init())
 	{
@@ -72,24 +72,8 @@ int main(int argc, char* args[])
 			SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
 			SDL_RenderClear( gRenderer );
 
-			// Top left corner viewport
-			SDL_Rect fullscreenViewport = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
-			SDL_Rect topLeftViewport = { 0, 0, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 };
-			SDL_Rect topRightViewport = { SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 };
-			SDL_Rect bottomViewport = { 0, SCREEN_HEIGHT / 2, SCREEN_WIDTH, SCREEN_HEIGHT / 2 };
-			
-
 			//Render texture to screen
-			SDL_RenderSetViewport( gRenderer, &topLeftViewport ); 
 			SDL_RenderCopy( gRenderer, gCurrentTexture, NULL, NULL );
-
-			SDL_RenderSetViewport( gRenderer, &topRightViewport ); 
-			SDL_RenderCopy( gRenderer, gCurrentTexture, NULL, NULL );
-
-			SDL_RenderSetViewport( gRenderer, &bottomViewport ); 
-			SDL_RenderCopy( gRenderer, gCurrentTexture, NULL, NULL );
-
-			SDL_RenderSetViewport( gRenderer, &fullscreenViewport );
 
 			// Render red square
 			SDL_Rect fillRect = {
