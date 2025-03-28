@@ -64,9 +64,12 @@ bool LTexture::loadFromFile(const char* path)
         }
         else
         {
+            texture_path = path;
             width = loadedSurface->w;
             height = loadedSurface->h;
         }
+
+        printf("Dimensions: W:%d, H:%d\n", width, height);
 
         //Get rid of old loaded surface
         SDL_FreeSurface( loadedSurface );
@@ -117,7 +120,10 @@ SDL_Rect LTexture::spriteSelect( int sprite_w, int sprite_h, int number )
     return SDL_Rect( { sprite_w * (number % x_len), sprite_h * (number / x_len), sprite_w, sprite_h} );
 }
 
-void LTexture::render( int x, int y, SDL_Rect* clip )
+void LTexture::render(
+    int x, int y, SDL_Rect* clip,
+    double angle, SDL_Point* center, SDL_RendererFlip flip
+)
 {
     //Set rendering space and render to screen
     SDL_Rect renderQuad = { x, y, width, height };
@@ -129,12 +135,15 @@ void LTexture::render( int x, int y, SDL_Rect* clip )
         renderQuad.h = clip->h;
     }
 
-    SDL_RenderCopy( gRenderer, mTexture, clip, &renderQuad );
+    SDL_RenderCopyEx( gRenderer, mTexture, clip, &renderQuad, angle, center, flip );
 }
 
-void LTexture::renderCenter(int x, int y, SDL_Rect* clip)
+void LTexture::renderCenter(
+    int x, int y, SDL_Rect* clip,
+    double angle, SDL_Point* center, SDL_RendererFlip flip
+)
 {
-    this->render(x - this->width / 2, y - this->height / 2, clip);
+    this->render(x - this->width / 2, y - this->height / 2, clip, angle, center, flip);
 }
 
 void LTexture::resize(int w, int h)
@@ -172,9 +181,6 @@ enum KeyPressSurfaces
 {
 	KEY_PRESS_SURFACE_DEFAULT,
 	KEY_PRESS_SURFACE_UP,
-	KEY_PRESS_SURFACE_DOWN,
-	KEY_PRESS_SURFACE_LEFT,
-	KEY_PRESS_SURFACE_RIGHT,
 	KEY_PRESS_SURFACE_TOTAL
 };
 
@@ -289,7 +295,7 @@ bool loadMedia()
         success = false;
     }
 
-    for (int i = 1; i < sizeof(gKeyPressSurfaces) / 20 - 1; i++)
+    for (int i = 1; i < KEY_PRESS_SURFACE_TOTAL; i++)
     {
         char buffer[3];
         char string[32] = {"img/Shuka"};

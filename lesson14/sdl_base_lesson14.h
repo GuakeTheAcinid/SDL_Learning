@@ -35,10 +35,16 @@ public:
     SDL_Rect spriteSelect(int sprite_w, int sprite_h, int number);
 
     //Renders texture at given point
-    void render(int x, int y, SDL_Rect* clip = NULL);
+    void render(
+        int x, int y, SDL_Rect* clip = NULL,
+        double angle = 0.0, SDL_Point* center = NULL, SDL_RendererFlip flip = SDL_FLIP_NONE
+    );
 
     //Renders texture at given point
-    void renderCenter(int x, int y, SDL_Rect* clip = NULL);
+    void renderCenter(
+        int x, int y, SDL_Rect* clip = NULL,
+        double angle = 0.0, SDL_Point* center = NULL, SDL_RendererFlip flip = SDL_FLIP_NONE
+    );
 
     //Resizes the texture
     void resize(int w, int h);

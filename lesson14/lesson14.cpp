@@ -27,6 +27,13 @@ int main(int argc, char* args[])
 
 		int x_pos = SCREEN_WIDTH / 2;
 		int y_pos = SCREEN_HEIGHT / 2;
+		
+		double angle = 0;
+		bool go_rotate = false;
+
+		//Flip type
+		SDL_RendererFlip flipType = SDL_FLIP_NONE;
+		double rotation = 0;
 
 		//RGB components
 		Uint8 col_r = 255;
@@ -64,21 +71,29 @@ int main(int argc, char* args[])
 						case SDLK_UP:
 							y_pos -= 1 * SPEED_MULTIPLIER;
 							gCurrentTexture = gKeyPressSurfaces[ KEY_PRESS_SURFACE_UP ];
+							rotation = 0;
+                            flipType = SDL_FLIP_NONE;
 							break;
 						
 						case SDLK_DOWN:
 							y_pos += 1 * SPEED_MULTIPLIER;
-							gCurrentTexture = gKeyPressSurfaces[ KEY_PRESS_SURFACE_DOWN ];
+							gCurrentTexture = gKeyPressSurfaces[ KEY_PRESS_SURFACE_UP ];
+							rotation = 180;
+                            flipType = SDL_FLIP_NONE;
 							break;
 						
 						case SDLK_LEFT:
 							x_pos -= 1 * SPEED_MULTIPLIER;
-							gCurrentTexture = gKeyPressSurfaces[ KEY_PRESS_SURFACE_LEFT ];
+							gCurrentTexture = gKeyPressSurfaces[ KEY_PRESS_SURFACE_UP ];
+							rotation = 90;
+							flipType = SDL_FLIP_VERTICAL;
 							break;
 						
 						case SDLK_RIGHT:
 							x_pos += 1 * SPEED_MULTIPLIER;
-							gCurrentTexture = gKeyPressSurfaces[ KEY_PRESS_SURFACE_RIGHT ];
+							gCurrentTexture = gKeyPressSurfaces[ KEY_PRESS_SURFACE_UP ];
+							rotation = 90;
+                            flipType = SDL_FLIP_NONE;
 							break;
 						
 						case SDLK_1:
@@ -113,6 +128,10 @@ int main(int argc, char* args[])
 							col_a -= ( col_a - COL_MULTIPLIER < 0 ? 0 : COL_MULTIPLIER );
 							break;
 						
+						case SDLK_r:
+							go_rotate = true;
+							break;
+						
 						default:
 							gCurrentTexture = gKeyPressSurfaces[ KEY_PRESS_SURFACE_DEFAULT ];
 							break;
@@ -123,7 +142,15 @@ int main(int argc, char* args[])
 			// new frame each window frame
 			frame += 1;
 
-			gCurrentTexture.resize( SCREEN_WIDTH / 8, SCREEN_HEIGHT / 8 );
+			if (go_rotate)
+			{
+				angle += 2;
+				if (angle > 361)
+				{
+					angle = 0;
+					go_rotate = false;
+				}
+			}
 
 			//Clear screen
 			SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
@@ -137,7 +164,8 @@ int main(int argc, char* args[])
 			//Render texture to screen
 			gCurrentTexture.setColor( col_r, col_g, col_b );
 			gCurrentTexture.setAlpha( col_a );
-			gCurrentTexture.renderCenter( x_pos, y_pos );
+			gCurrentTexture.resize( SCREEN_HEIGHT / 8, SCREEN_WIDTH / 8 );
+			gCurrentTexture.renderCenter( x_pos, y_pos, NULL, rotation + angle, NULL, flipType );
 
             //Render top left sprite
             sprite_rect = spriteSheetTexture.spriteSelect( sprite_w, sprite_h, ((frame / 4) + 0) % 4 );
